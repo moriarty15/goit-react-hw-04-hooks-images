@@ -33,7 +33,7 @@ export default function ImageGallery({ query, page }) {
           top: document.documentElement.scrollHeight,
           behavior: "smooth",
         });
-      });
+      })
   };
 
   const images = JSON.parse(localStorage.getItem("images"));
