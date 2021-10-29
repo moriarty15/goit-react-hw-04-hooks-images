@@ -16,25 +16,27 @@ function App() {
   const [large, setLarge] = useState(null);
 
   useEffect(() => {
-    window.addEventListener("click", (e) => {
-      const findImg = e.target.src;
-      const findImgforModal = images.find((e) => e.webformatURL === findImg);
-      if (findImgforModal) {
-        setLarge(findImgforModal.largeImageURL);
-        setShowModal(true);
-      }
-    });
+    window.addEventListener("click", openModal);
+    return () => {
+      window.removeEventListener("click", openModal);
+    };
   }, [images]);
 
   useEffect(() => {
     if (query.trim() === "") {
-      return
+      return;
     }
-    if (page === 1) {setImages([])}
     fetchRequest();
-
   }, [query, page]);
 
+  const openModal = (e) => {
+    const findImg = e.target.src;
+    const findImgModal = images.find((e) => e.webformatURL === findImg);
+    if (findImgModal) {
+      setLarge(findImgModal.largeImageURL);
+      setShowModal(true);
+    }
+  };
 
   const onClose = () => {
     setShowModal(false);
@@ -47,7 +49,7 @@ function App() {
 
   const clickLoadMore = (e) => {
     e.preventDefault();
-    setPage(state => state + 1);
+    setPage((state) => state + 1);
   };
 
   const fetchRequest = () => {
@@ -62,10 +64,16 @@ function App() {
           );
           return;
         }
+
         const arrEx = hit.hits.map(({ id, largeImageURL, webformatURL }) => {
           return { id, largeImageURL, webformatURL };
         });
-        setImages([...images, ...arrEx]);
+        if (page === 1) {
+          setImages([...arrEx]);
+        } else {
+          setImages([...images, ...arrEx]);
+        }
+
         setShowSpiner(false);
         window.scrollTo({
           top: document.documentElement.scrollHeight,
