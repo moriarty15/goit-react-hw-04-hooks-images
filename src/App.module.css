@@ -32,3 +32,8 @@ img {
   grid-gap: 16px;
   padding-bottom: 24px;
 }
+.centred {
+  margin-left: auto;
+  margin-right: auto;
+  width: 80px;
+}
